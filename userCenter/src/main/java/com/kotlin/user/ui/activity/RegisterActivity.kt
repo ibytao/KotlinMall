@@ -3,6 +3,8 @@ package com.kotlin.user.ui.activity
 import android.os.Bundle
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.user.R
+import com.kotlin.user.injection.component.DaggerUserComponent
+import com.kotlin.user.injection.module.UserModule
 import com.kotlin.user.presenter.RegisterPresenter
 import com.kotlin.user.presenter.view.RegisterView
 import kotlinx.android.synthetic.main.activity_register.*
@@ -14,15 +16,19 @@ class RegisterActivity: BaseMvpActivity<RegisterPresenter>(), RegisterView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        mPresenter = RegisterPresenter()
-        mPresenter.mView = this
+        initInjection()
 
         mRegisterBtn.setOnClickListener {
-            mPresenter.register("", "")
+            mPresenter.register("", "","")
         }
     }
 
     override fun onRegisterResult(result: Boolean) {
-        toast("ok")
+        toast("ok: " + result)
+    }
+
+    private fun initInjection() {
+        DaggerUserComponent.builder().userModule(UserModule()).build().inject(this)
+        mPresenter.mView = this
     }
 }
