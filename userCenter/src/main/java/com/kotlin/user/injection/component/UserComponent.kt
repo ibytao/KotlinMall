@@ -1,10 +1,13 @@
 package com.kotlin.user.injection.component
 
+import com.kotlin.base.injection.scope.PerComponentScope
+import com.kotlin.base.injection.component.ActivityComponent
 import com.kotlin.user.injection.module.UserModule
 import com.kotlin.user.ui.activity.RegisterActivity
 import dagger.Component
 
-@Component(modules = arrayOf(UserModule::class))
+@PerComponentScope
+@Component(dependencies = arrayOf(ActivityComponent::class), modules = arrayOf(UserModule::class))
 interface UserComponent {
     fun inject(activity: RegisterActivity)
 }

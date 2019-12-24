@@ -1,6 +1,9 @@
 package com.kotlin.user.ui.activity
 
 import android.os.Bundle
+import com.kaopiz.kprogresshud.KProgressHUD
+import com.kotlin.base.common.AppManager
+import com.kotlin.base.ext.onClick
 import com.kotlin.base.ui.activity.BaseMvpActivity
 import com.kotlin.user.R
 import com.kotlin.user.injection.component.DaggerUserComponent
@@ -12,23 +15,34 @@ import org.jetbrains.anko.toast
 
 class RegisterActivity: BaseMvpActivity<RegisterPresenter>(), RegisterView {
 
+    private var pressTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        initInjection()
-
-        mRegisterBtn.setOnClickListener {
+        mRegisterBtn.onClick {
             mPresenter.register("", "","")
         }
     }
 
     override fun onRegisterResult(result: Boolean) {
-        toast("ok: " + result)
+         toast("ok: " + result)
     }
 
-    private fun initInjection() {
-        DaggerUserComponent.builder().userModule(UserModule()).build().inject(this)
+    override fun injectComponent() {
+        DaggerUserComponent.builder().activityComponent(activityComponent).userModule(UserModule()).build().inject(this)
         mPresenter.mView = this
+    }
+
+    override fun onBackPressed() {
+        val time = System.currentTimeMillis()
+        if (time - pressTime > 2000) {
+            toast("exit")
+            pressTime = time
+        } else {
+            AppManager.instance.exitApp(this)
+        }
+
     }
 }

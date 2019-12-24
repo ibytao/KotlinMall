@@ -5,7 +5,6 @@ import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.rx.BaseSubscriber
 import com.kotlin.user.presenter.view.RegisterView
 import com.kotlin.user.service.UserService
-import com.kotlin.user.service.impl.UserServiceImpl
 import javax.inject.Inject
 
 class RegisterPresenter @Inject constructor() : BasePresenter<RegisterView>() {
@@ -14,12 +13,16 @@ class RegisterPresenter @Inject constructor() : BasePresenter<RegisterView>() {
 
     fun register(mobile:String, verifyCode:String, pwd:String) {
 
+        if (!checkNetWork()) {
+            return
+        }
 
+        mView.showLoading()
         userService.register(mobile, verifyCode, pwd)
-            .execute(object: BaseSubscriber<Boolean>(){
+            .execute(object: BaseSubscriber<Boolean>(mView){
                 override fun onNext(t: Boolean) {
                     mView.onRegisterResult(t)
                 }
-            })
+            }, lifecycleProvider)
     }
 }

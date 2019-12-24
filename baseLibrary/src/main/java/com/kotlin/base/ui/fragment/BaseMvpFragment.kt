@@ -1,4 +1,4 @@
-package com.kotlin.base.ui.activity
+package com.kotlin.base.ui.fragment
 
 import android.os.Bundle
 import com.kaopiz.kprogresshud.KProgressHUD
@@ -9,11 +9,10 @@ import com.kotlin.base.injection.module.ActivityModule
 import com.kotlin.base.injection.module.LifcycleProviderModule
 import com.kotlin.base.presenter.BasePresenter
 import com.kotlin.base.presenter.view.BaseView
-import okhttp3.internal.waitMillis
-import org.jetbrains.anko.toast
+import org.jetbrains.anko.support.v4.toast
 import javax.inject.Inject
 
-abstract class BaseMvpActivity<T:BasePresenter<*>>: BaseActivity(), BaseView {
+abstract class BaseMvpFragment<T:BasePresenter<*>>: BaseFragment(), BaseView {
     @Inject
     lateinit var mPresenter: T
 
@@ -27,19 +26,19 @@ abstract class BaseMvpActivity<T:BasePresenter<*>>: BaseActivity(), BaseView {
         initActivityInjection()
         injectComponent()
 
-        mLoadingDialog = KProgressHUD.create(this)
+        mLoadingDialog = KProgressHUD.create(activity)
             .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
             .setCancellable(true)
             .setAnimationSpeed(2)
             .setDimAmount(0.5f)
     }
 
-    protected abstract fun injectComponent()
+    abstract fun injectComponent()
 
     private fun initActivityInjection() {
         activityComponent = DaggerActivityComponent.builder()
-            .appComponent((application as BaseApplication).appComponent)
-            .activityModule(ActivityModule(this))
+            .appComponent((activity?.application as BaseApplication).appComponent)
+            .activityModule(ActivityModule(activity!!))
             .lifcycleProviderModule(LifcycleProviderModule(this))
             .build()
     }
