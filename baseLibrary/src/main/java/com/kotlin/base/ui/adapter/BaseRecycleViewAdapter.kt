@@ -1,7 +1,6 @@
 package com.kotlin.base.ui.adapter
 
 import android.content.Context
-import android.widget.AdapterView
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseRecycleViewAdapter<T, VH: RecyclerView.ViewHolder>(var mContext: Context): RecyclerView.Adapter<VH>() {

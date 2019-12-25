@@ -70,4 +70,6 @@ dependencies {
 
     api "com.kaopiz:kprogresshud:1.0.2"
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation "com.ashokvarma.android:bottom-navigation-bar:$bottom_navigation_bar_version"
 }
